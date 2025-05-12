@@ -1,0 +1,2 @@
+# philosophers
+Hilos, procesos, mutex.
