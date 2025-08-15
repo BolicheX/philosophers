@@ -6,7 +6,7 @@
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 20:06:53 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/06/11 17:52:54 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/06/14 12:33:52 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,9 @@ int	ft_usleep(size_t milliseconds)
 	while ((get_current_time() - start) < milliseconds)
 		usleep(500);
 	return (0);
+}
+
+void	pip(void)
+{
+	printf("PIP\n");
 }

@@ -6,7 +6,7 @@
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 20:08:37 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/06/11 23:26:36 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/06/14 12:34:17 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_philo
 	size_t			time_to_sleep;
 	size_t			time_start;
 	int				num_of_philos;
+	int				num_times_to_eat;
 	int				*dead;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
@@ -56,6 +57,7 @@ typedef struct s_program
 	int				dead_flag;
 	int				num_of_philos;
 	int				num_times_to_eat;
+	size_t			start_time;
 	pthread_mutex_t	dead_lock;
 	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	write_lock;
@@ -68,5 +70,6 @@ int	ft_isnum(char *s);
 int	ft_atoi(const char *str);
 int	ft_usleep(size_t milliseconds);
 size_t	get_current_time(void);
+void	pip(void);
 
 #endif
