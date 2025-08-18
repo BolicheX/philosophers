@@ -6,7 +6,7 @@
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 20:06:53 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/06/14 12:33:52 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/08/18 18:54:18 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ size_t	get_current_time(void)
 		write(2, "gettimeofday() error\n", 22);
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
+
 // Improved version of sleep function
 int	ft_usleep(size_t milliseconds)
 {
@@ -74,7 +75,13 @@ int	ft_usleep(size_t milliseconds)
 	return (0);
 }
 
-void	pip(void)
+int	ft_exit(int error)
 {
-	printf("PIP\n");
+	if (error)
+	{
+		write(2, "Error\n", 6);
+		exit(EXIT_FAILURE);
+	}
+	else
+		exit(EXIT_SUCCESS);
 }

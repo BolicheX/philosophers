@@ -6,7 +6,7 @@
 #    By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 12:20:27 by jose-jim          #+#    #+#              #
-#    Updated: 2025/06/13 22:13:43 by jose-jim         ###   ########.fr        #
+#    Updated: 2025/08/18 18:55:21 by jose-jim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,8 +30,11 @@ WHITE = \033[0;97m
 PS_NAME = philo
 
 # Source files
-PS_SOURCE = philo.c \
-			aux.c
+PS_SOURCE = main.c \
+			aux.c \
+			init.c \
+			monitor.c \
+			philosopher.c
 
 # Object files
 PS_OBJ = $(PS_SOURCE:.c=.o)

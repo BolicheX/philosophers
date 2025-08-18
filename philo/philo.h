@@ -6,19 +6,7 @@
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 20:08:37 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/06/14 12:34:17 by jose-jim         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   push_swap.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/07 12:17:53 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/04/24 19:48:02 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/08/18 19:15:42 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +15,14 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-#include <stdio.h>
-#include <pthread.h>
-#include <sys/time.h>
+# include <stdio.h>
+# include <pthread.h>
+# include <sys/time.h>
 
 typedef struct s_philo
 {
 	pthread_t		thread;
 	int				id;
-	int				eating;
 	int				meals_eaten;
 	size_t			time_to_die;
 	size_t			time_meal;
@@ -48,7 +35,7 @@ typedef struct s_philo
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*write_lock;
-	pthread_mutex_t	*dead_lock;
+	//pthread_mutex_t	*dead_lock;
 	pthread_mutex_t	*meal_lock;
 }					t_philo;
 
@@ -58,18 +45,39 @@ typedef struct s_program
 	int				num_of_philos;
 	int				num_times_to_eat;
 	size_t			start_time;
-	pthread_mutex_t	dead_lock;
+	//pthread_mutex_t	dead_lock;
 	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	*forks;
 	t_philo			*philos;
 }					t_program;
 
-/* -------◊	AUX	◊------- */
-int	ft_isnum(char *s);
-int	ft_atoi(const char *str);
-int	ft_usleep(size_t milliseconds);
+/* -------◊	AUXILIARY	◊------- */
+int		ft_isnum(char *s);
+int		ft_atoi(const char *str);
+int		ft_usleep(size_t milliseconds);
 size_t	get_current_time(void);
-void	pip(void);
+int		ft_exit(int error);
+
+/* -------◊	INITIALIZATION	◊------- */
+void	ft_init_philos(t_program *prog, int *args, int id);
+void	ft_init_program(t_program *prog, int *args);
+
+/* -------◊	MAIN	◊------- */
+void	*ft_parse(int *args, char **argv, int argc);
+void	ft_thread(t_program *prog);
+void	ft_finish(t_program *prog);
+
+/* -------◊	MONITOR	◊------- */
+void	*ft_monitoring(void *arg);
+int		ft_check_dead(t_program *prog);
+int		ft_check_full(t_program *prog);
+void	ft_kill(t_program *prog);
+
+/* -------◊	PHILOSOPHERS	◊------- */
+void	*ft_routine(void *arg);
+void	*ft_fork(t_philo *philo);
+void	ft_eat(t_philo *philo);
+void	ft_status(t_philo *philo, char *str);
 
 #endif
