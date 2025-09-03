@@ -6,7 +6,7 @@
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 17:32:35 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/08/18 19:13:24 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/09/03 03:46:51 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,16 @@ void	*ft_monitoring(void *arg)
 	prog = (t_program *)arg;
 	while (get_current_time() < prog->start_time)
 		usleep(50);
-	if (prog->num_times_to_eat == 0)
-	{
-		ft_kill(prog);
-		return (NULL);
-	}
 	while (1)
 	{
-		if (ft_check_full(prog))
+		if (ft_check_full(prog) || ft_check_dead(prog))
 		{
-			ft_kill(prog);
-			break ;
+			prog->death = 1;
+			pthread_mutex_lock(&prog->meal_lock);
+			pthread_mutex_lock(&prog->write_lock);
+			return (NULL);
 		}
-		if (ft_check_dead(prog))
-			break ;
-		ft_usleep(10);
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -48,19 +43,15 @@ void	*ft_monitoring(void *arg)
 int	ft_check_dead(t_program *prog)
 {
 	int		i;
-	size_t	current_time;
-	long	time_diff;
 
-	current_time = get_current_time();
 	i = 0;
 	while (i < prog->num_of_philos)
 	{
 		pthread_mutex_lock(&prog->meal_lock);
-		time_diff = current_time - prog->philos[i].time_meal;
-		if ((size_t)time_diff > prog->philos[i].time_to_die)
+		if (get_current_time() - prog->philos[i].time_meal
+			> prog->philos[i].time_to_die)
 		{
-			ft_status(&prog->philos[i], "died");
-			ft_kill(prog);
+			ft_status(&prog->philos[i], RED"died"RESET);
 			pthread_mutex_unlock(&prog->meal_lock);
 			return (1);
 		}
@@ -77,24 +68,17 @@ int	ft_check_full(t_program *prog)
 
 	i = 0;
 	full_philos = 0;
+	if (prog->num_times_to_eat == -1)
+		return (0);
 	while (i < prog->num_of_philos)
 	{
 		pthread_mutex_lock(&prog->meal_lock);
-		if (prog->num_times_to_eat > 0
-			&& prog->philos[i].meals_eaten >= prog->num_times_to_eat)
+		if (prog->philos[i].meals_eaten >= prog->num_times_to_eat)
 			full_philos++;
 		pthread_mutex_unlock(&prog->meal_lock);
 		i++;
 	}
-	if (prog->num_times_to_eat > 0 && full_philos == prog->num_of_philos)
+	if (full_philos == prog->num_of_philos)
 		return (1);
 	return (0);
-}
-
-void	ft_kill(t_program *prog)
-{
-	//pthread_mutex_lock(&prog->dead_lock);
-	if (prog->dead_flag == 0)
-		prog->dead_flag = 1;
-	//pthread_mutex_unlock(&prog->dead_lock);
 }

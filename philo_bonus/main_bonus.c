@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:32:35 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/09/03 03:12:28 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/09/03 00:40:16 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 void	*ft_parse(int *args, char **argv, int argc)
 {
@@ -37,64 +37,68 @@ void	*ft_parse(int *args, char **argv, int argc)
 	return (NULL);
 }
 
-void	ft_thread(t_program *prog)
+void	ft_exec(t_program *prog)
 {
 	int			i;
-	pthread_t	monitor;
+	pid_t		pid;
+	pthread_t	full_thread;
 
-	i = 0;
-	pthread_create(&monitor, NULL, &ft_monitoring, (void *)prog);
-	while (i < prog->num_of_philos)
+	i = -1;
+	if (prog->philos[0].num_times_to_eat > 0)
 	{
-		if (pthread_create(&prog->philos[i].thread, NULL,
-				&ft_routine, (void *)&prog->philos[i]) != 0)
-			ft_destroy_mutex(prog, RED"Thread error"RESET, EXIT_FAILURE);
-		if (pthread_detach(prog->philos[i].thread) != 0)
-			ft_destroy_mutex(prog, RED"Thread error"RESET, EXIT_FAILURE);
-		i++;
+		if (pthread_create(&full_thread, NULL, &ft_check_full, prog) == -1)
+			ft_finish(prog, RED"Thread creation error"RESET, 1, EXIT_FAILURE);
+		if (pthread_detach(full_thread) == -1)
+			ft_finish(prog, RED"Thread detach error"RESET, 1, EXIT_FAILURE);
 	}
-	if (pthread_join(monitor, NULL) != 0)
-		ft_destroy_mutex(prog, RED"Thread error"RESET, EXIT_FAILURE);
-	return ;
+	while (++i < prog->num_of_philos)
+	{
+		pid = fork();
+		if (pid < 0)
+			ft_finish(prog, RED"Fork error"RESET, 1, EXIT_FAILURE);
+		prog->philos[i].pid = pid;
+		if (pid == 0)
+			ft_philo_born(&prog->philos[i]);
+	}
+	waitpid(-1, NULL, 0);
+	ft_finish(prog, NULL, 1, EXIT_SUCCESS);
 }
 
-void	ft_destroy_mutex(t_program *prog, char *error, int signal)
+void	*ft_check_full(void *arg)
 {
-	int	i;
+	t_program	*prog;
+	int			full;
 
-	pthread_mutex_destroy(&prog->meal_lock);
-	pthread_mutex_destroy(&prog->write_lock);
-	i = 0;
-	while (i < prog->num_of_philos)
+	prog = (t_program *)arg;
+	full = 0;
+	while (get_current_time() < prog->start_time)
+		usleep(50);
+	while (1)
 	{
-		pthread_mutex_destroy(&prog->forks[i]);
-		i++;
+		sem_wait(prog->full_sem);
+		full++;
+		if (full >= prog->num_of_philos)
+		{
+			sem_wait(prog->write_sem);
+			ft_finish(prog, NULL, 1, EXIT_SUCCESS);
+		}
 	}
-	ft_exit(error, signal);
+	return (NULL);
 }
 
 int	main(int argc, char **argv)
 {
 	int				args[5];
 	t_program		program;
-	t_philo			philos[200];
-	pthread_mutex_t	forks[200];
+	t_philo			philos[PHILO_MAX_COUNT];
 	int				i;
 
 	ft_parse(args, argv, argc);
 	ft_init_program(&program, args);
-	if (program.num_times_to_eat == 0)
-		exit(EXIT_SUCCESS);
 	program.philos = philos;
-	program.forks = forks;
 	i = 0;
 	while (i < program.num_of_philos)
-	{
-		pthread_mutex_init(&forks[i], NULL);
-		ft_init_philos(&program, args, i);
-		i++;
-	}
-	ft_thread(&program);
-	ft_destroy_mutex(&program, NULL, 0);
+		ft_init_philos(&program, args, i++);
+	ft_exec(&program);
 	return (0);
 }

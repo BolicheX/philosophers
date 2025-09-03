@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   aux.c                                              :+:      :+:    :+:   */
+/*   aux_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 20:06:53 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/09/03 00:05:12 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/09/02 21:16:52 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 int	ft_isnum(char *s)
 {
@@ -64,6 +64,7 @@ size_t	get_current_time(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
+// Improved version of sleep function
 int	ft_usleep(size_t milliseconds)
 {
 	size_t	start;
@@ -72,15 +73,4 @@ int	ft_usleep(size_t milliseconds)
 	while ((get_current_time() - start) < milliseconds)
 		usleep(500);
 	return (0);
-}
-
-void	ft_exit(char *error, int signal)
-{
-	if (error)
-	{
-		printf("%s\n", error);
-		exit(signal);
-	}
-	else
-		exit(signal);
 }
