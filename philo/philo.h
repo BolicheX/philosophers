@@ -6,7 +6,7 @@
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 20:08:37 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/09/03 03:44:54 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:36:53 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	ft_update_round_phase(t_program *prog);
 
 /* -------◊	PHILOSOPHERS	◊------- */
 void	*ft_routine(void *arg);
-void	ft_eat(t_philo *philo);
-void	ft_status(t_philo *philo, char *str);
+int		ft_eat(t_philo *philo);
+int		ft_status(t_philo *philo, char *str);
 
 #endif

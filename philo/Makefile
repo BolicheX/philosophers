@@ -6,13 +6,13 @@
 #    By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/07 12:20:27 by jose-jim          #+#    #+#              #
-#    Updated: 2025/09/02 21:21:43 by jose-jim         ###   ########.fr        #
+#    Updated: 2025/09/09 17:32:56 by jose-jim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Compilation
 CC = gcc -g
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
 REMOVE = rm -rf
 
 # Colors

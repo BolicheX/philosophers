@@ -6,7 +6,7 @@
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 17:32:35 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/09/03 00:18:49 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/09/09 18:21:18 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ void	*ft_check_dead(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (get_current_time() < philo->prog->start_time)
-		usleep(50);
 	while (1)
 	{
 		sem_wait(philo->prog->meal_sem);

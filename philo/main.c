@@ -6,7 +6,7 @@
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:32:35 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/09/03 03:12:28 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:58:19 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,19 @@ void	ft_thread(t_program *prog)
 		if (pthread_create(&prog->philos[i].thread, NULL,
 				&ft_routine, (void *)&prog->philos[i]) != 0)
 			ft_destroy_mutex(prog, RED"Thread error"RESET, EXIT_FAILURE);
-		if (pthread_detach(prog->philos[i].thread) != 0)
-			ft_destroy_mutex(prog, RED"Thread error"RESET, EXIT_FAILURE);
+		/*if (pthread_detach(prog->philos[i].thread) != 0)
+			ft_destroy_mutex(prog, RED"Thread error"RESET, EXIT_FAILURE);*/
 		i++;
 	}
 	if (pthread_join(monitor, NULL) != 0)
-		ft_destroy_mutex(prog, RED"Thread error"RESET, EXIT_FAILURE);
+		ft_destroy_mutex(prog, RED"Monitor Thread error"RESET, EXIT_FAILURE);
+	i = 0;
+	while (i < prog->num_of_philos)
+	{
+		if (pthread_join(prog->philos[i].thread, NULL) != 0)
+			ft_destroy_mutex(prog, RED"Philosopher Thread error"RESET, EXIT_FAILURE);
+		i++;
+	}
 	return ;
 }
 
@@ -77,8 +84,8 @@ int	main(int argc, char **argv)
 {
 	int				args[5];
 	t_program		program;
-	t_philo			philos[200];
-	pthread_mutex_t	forks[200];
+	t_philo			philos[PHILO_MAX_COUNT];
+	pthread_mutex_t	forks[PHILO_MAX_COUNT];
 	int				i;
 
 	ft_parse(args, argv, argc);

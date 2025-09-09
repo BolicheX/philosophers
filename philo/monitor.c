@@ -6,7 +6,7 @@
 /*   By: jose-jim <jose-jim@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 17:32:35 by jose-jim          #+#    #+#             */
-/*   Updated: 2025/09/03 03:46:51 by jose-jim         ###   ########.fr       */
+/*   Updated: 2025/09/09 18:03:16 by jose-jim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	*ft_monitoring(void *arg)
 	{
 		if (ft_check_full(prog) || ft_check_dead(prog))
 		{
-			prog->death = 1;
-			pthread_mutex_lock(&prog->meal_lock);
 			pthread_mutex_lock(&prog->write_lock);
+			prog->death = 1;
+			pthread_mutex_unlock(&prog->write_lock);
 			return (NULL);
 		}
 		usleep(100);
